@@ -3,7 +3,9 @@ import os
 import sys
 import threading
 import signal
+import time
 
+timestr = time.strftime("%Y%m%d_%H%M%S")
 interface = "eth1"
 target_ip = "192.168.1.15"
 gateway_ip = "192.168.1.1"
@@ -96,7 +98,7 @@ except KeyboardInterrupt:
 finally:
     # write out the captured packets
     print "[*] Writing packets to arper.pcap"
-    wrpcap("arper.pcap", packets)
+    wrpcap( 'trace' + timestr + '.pacp'+  , packets)
 
     # get the poison thread to stop
     poisoning = False
