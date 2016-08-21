@@ -98,7 +98,7 @@ except KeyboardInterrupt:
 finally:
     # write out the captured packets
     print "[*] Writing packets to arper.pcap"
-    wrpcap( 'trace' + timestr + '.pacp'+  , packets)
+    wrpcap( 'trace' + timestr + '.pacp' , packets)
 
     # get the poison thread to stop
     poisoning = False
